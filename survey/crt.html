@@ -1,0 +1,21 @@
+{{ for eachfield in form }}
+    <div class="card my-5">
+        <div class="card-body">
+            <h5 class="card-title">
+                {{ forloop.counter }}
+            </h5>
+            <div class="card-text">
+                <div class="my-2">
+                    {{ eachfield.label }}
+                </div>
+                <div class="col col-lg-3">
+                    <div class="input-group my-2">
+                        <input class="form-control form-control-lg" type="text" id="{{ eachfield.id }}" name="{{ eachfield.name }}" required>
+                        <span class="input-group-text">{{ eachfield.description }}</span>
+                    </div>
+                </div>
+                {{ formfield_errors eachfield.name }}
+            </div>
+        </div>
+    </div>
+{{ endfor }}

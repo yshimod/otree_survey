@@ -1,0 +1,25 @@
+<div>
+    Using the following scale, please indicate how much you agree or disagree with the following statements: 
+</div>
+
+{{ for eachfield in form }}
+    <div class="card my-5">
+        <div class="card-body">
+            <h5 class="card-title">
+                {{ forloop.counter }}
+            </h5>
+            <div class="card-text">
+                <div class="my-2">
+                    {{ eachfield.label }}
+                </div>
+                <div class="btn-group btn-group-lg d-flex" role="group">
+                    {{ for v in C.materials_gentrust.opts }}
+                        <input type="radio" class="btn-check" name="{{ eachfield.name }}" id="{{ eachfield.id }}-{{ v.0 }}" autocomplete="off" value="{{ v.0 }}" required>
+                        <label class="btn btn-outline-primary" for="{{ eachfield.id }}-{{ v.0 }}">{{ v.1 }}</label>
+                    {{ endfor }}
+                </div>
+                {{ formfield_errors eachfield.name }}
+            </div>
+        </div>
+    </div>
+{{ endfor }}

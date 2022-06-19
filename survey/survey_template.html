@@ -1,0 +1,19 @@
+{{ block title }}
+    アンケートにご回答ください （ {{ page_num }} / 2 ページ ）
+{{ endblock }}
+
+{{ block content }}
+{#
+    {{ formfields }}
+#}
+
+    {{ if page_name == "crt" }}
+        {{ include C.crt_template_name }}
+    {{ elif page_name == "gentrust" }}
+        {{ include C.gentrust_template_name }}
+    {{ endif }}
+
+
+    {{ next_button }}
+
+{{ endblock }}
