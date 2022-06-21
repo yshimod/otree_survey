@@ -83,10 +83,12 @@ class Subsession(BaseSubsession):
 
 
 class Group(BaseGroup):
-    testg = models.FloatField()
+    pass
 
 
 class Player(BasePlayer):
+    switching_point = models.IntegerField()
+
     order_pages = models.LongStringField()
     order_crt = models.LongStringField()
     order_gentrust = models.LongStringField()
@@ -167,28 +169,22 @@ def calc_score_gentrust(player: Player, timeout_happened):
         player.score_gentrust = -1
 
 
-def my_get_form_fields(player: Player, classname):
-    idx = int(classname[-1]) - 1
-
-    if json.loads(player.order_pages)[idx] == "crt":
+def my_get_form_fields(player: Player, pgidx):
+    if json.loads(player.order_pages)[pgidx - 1] == "crt":
         return json.loads(player.order_crt)
     else:
         return json.loads(player.order_gentrust)
 
 
-def my_vars_for_template(player: Player, classname):
-    idx = int(classname[-1]) - 1
-
+def my_vars_for_template(player: Player, pgidx):
     return {
-        "page_num": idx + 1,
-        "page_name": json.loads(player.order_pages)[idx]
+        "page_num": pgidx,
+        "page_name": json.loads(player.order_pages)[pgidx - 1]
     }
 
 
-def my_before_next_page(player: Player, timeout_happened, classname):
-    idx = int(classname[-1]) - 1
-
-    if json.loads(player.order_pages)[idx] == "crt":
+def my_before_next_page(player: Player, timeout_happened, pgidx):
+    if json.loads(player.order_pages)[pgidx - 1] == "crt":
         calc_score_crt(player, timeout_happened)
     else:
         calc_score_gentrust(player, timeout_happened)
@@ -196,38 +192,50 @@ def my_before_next_page(player: Player, timeout_happened, classname):
 
 
 # PAGES
+class Samples(Page):
+    form_model = "player"
+    form_fields = ["switching_point"]
+
+    def vars_for_template(player: Player):
+        return {
+            "optR": [200, 250, 300, 350, 400]
+        }
+
+
 class Survey1(Page):
     template_name = C.survey_template_name
     form_model = "player"
+    pgidx = 1
 
     @staticmethod
     def get_form_fields(player: Player):
-        return my_get_form_fields(player, __class__.__name__)
+        return my_get_form_fields(player, __class__.pgidx)
 
     @staticmethod
     def vars_for_template(player: Player):
-        return my_vars_for_template(player, __class__.__name__)
+        return my_vars_for_template(player, __class__.pgidx)
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        my_before_next_page(player, timeout_happened, __class__.__name__)
+        my_before_next_page(player, timeout_happened, __class__.pgidx)
 
 
 class Survey2(Page):
     template_name = C.survey_template_name
     form_model = "player"
+    pgidx = 2
 
     @staticmethod
     def get_form_fields(player: Player):
-        return my_get_form_fields(player, __class__.__name__)
+        return my_get_form_fields(player, __class__.pgidx)
 
     @staticmethod
     def vars_for_template(player: Player):
-        return my_vars_for_template(player, __class__.__name__)
+        return my_vars_for_template(player, __class__.pgidx)
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        my_before_next_page(player, timeout_happened, __class__.__name__)
+        my_before_next_page(player, timeout_happened, __class__.pgidx)
 
 
 class Results(Page):
@@ -235,4 +243,4 @@ class Results(Page):
 
 
 
-page_sequence = [Survey1, Survey2, Results]
+page_sequence = [Samples, Survey1, Survey2, Results]
