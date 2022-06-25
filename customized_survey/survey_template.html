@@ -12,16 +12,14 @@
 {{ endblock }}
 
 {{ block content }}
-{#
-    {{ formfields }}
-#}
 
     {{ if page_name == "crt" }}
-        {{ include C.crt_template_name }}
-    {{ elif page_name == "gentrust" }}
-        {{ include C.gentrust_template_name }}
+        <!-- CRT -->
+    {{ else }}
+        <!-- Gen Trust -->
     {{ endif }}
 
+    {{ include page_path }}
 
     {{ next_button }}
 

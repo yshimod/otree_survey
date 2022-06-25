@@ -124,8 +124,8 @@ for k, v in C.materials_gentrust["items"].items():
 
 
 def creating_session(subsession: Subsession):
-    list_crt = [k for k in C.materials_crt["items"].keys()]
-    list_gentrust = [k for k in C.materials_gentrust["items"].keys()]
+    list_crt = [*C.materials_crt["items"].keys()]
+    list_gentrust = [*C.materials_gentrust["items"].keys()]
 
     for p in subsession.get_players():
         p.order_pages = json.dumps(
@@ -165,22 +165,39 @@ def calc_score_gentrust(player: Player, timeout_happened):
         player.score_gentrust = -1
 
 
+def get_pagename(player: Player, pgidx):
+    order_pages = json.loads(player.order_pages)
+
+    return order_pages[pgidx]
+
+
 def my_get_form_fields(player: Player, pgidx):
-    if json.loads(player.order_pages)[pgidx - 1] == "crt":
+    page_name = get_pagename(player, pgidx)
+
+    if page_name == "crt":
         return json.loads(player.order_crt)
     else:
         return json.loads(player.order_gentrust)
 
 
 def my_vars_for_template(player: Player, pgidx):
+    page_name = get_pagename(player, pgidx)
+
+    if page_name == "crt":
+        page_path = C.crt_template_name
+    else:
+        page_path = C.gentrust_template_name
+
     return {
-        "page_num": pgidx,
-        "page_name": json.loads(player.order_pages)[pgidx - 1]
+        "page_num": pgidx + 1,
+        "page_name": page_name,
+        "page_path": page_path
     }
 
 
 def my_before_next_page(player: Player, timeout_happened, pgidx):
-    if json.loads(player.order_pages)[pgidx - 1] == "crt":
+    page_name = get_pagename(player, pgidx)
+    if page_name == "crt":
         calc_score_crt(player, timeout_happened)
     else:
         calc_score_gentrust(player, timeout_happened)
@@ -191,7 +208,7 @@ def my_before_next_page(player: Player, timeout_happened, pgidx):
 class Survey1(Page):
     template_name = C.survey_template_name
     form_model = "player"
-    pgidx = 1
+    pgidx = 0
 
     @staticmethod
     def get_form_fields(player: Player):
@@ -209,7 +226,7 @@ class Survey1(Page):
 class Survey2(Page):
     template_name = C.survey_template_name
     form_model = "player"
-    pgidx = 2
+    pgidx = 1
 
     @staticmethod
     def get_form_fields(player: Player):
