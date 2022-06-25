@@ -2,6 +2,15 @@
     アンケートにご回答ください （ {{ page_num }} / 2 ページ ）
 {{ endblock }}
 
+{{ block styles }}
+    <style type="text/css">
+        .otree-btn-next {
+            display: block;
+            margin: 0 0 0 auto;
+        }
+    </style>
+{{ endblock }}
+
 {{ block content }}
 {#
     {{ formfields }}

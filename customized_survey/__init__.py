@@ -3,9 +3,7 @@ from otree.api import *
 import json
 import random
 
-doc = """
-Your app description
-"""
+doc = """ """
 
 
 class C(BaseConstants):
@@ -87,8 +85,6 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    switching_point = models.IntegerField()
-
     order_pages = models.LongStringField()
     order_crt = models.LongStringField()
     order_gentrust = models.LongStringField()
@@ -192,16 +188,6 @@ def my_before_next_page(player: Player, timeout_happened, pgidx):
 
 
 # PAGES
-class Samples(Page):
-    form_model = "player"
-    form_fields = ["switching_point"]
-
-    def vars_for_template(player: Player):
-        return {
-            "optR": [200, 250, 300, 350, 400]
-        }
-
-
 class Survey1(Page):
     template_name = C.survey_template_name
     form_model = "player"
@@ -243,4 +229,4 @@ class Results(Page):
 
 
 
-page_sequence = [Samples, Survey1, Survey2, Results]
+page_sequence = [Survey1, Survey2, Results]

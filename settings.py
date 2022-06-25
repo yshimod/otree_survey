@@ -2,7 +2,8 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        name = 'survey_samples',
+        name = 'customized_survey',
+        display_name = "（Qualtricsのような？）質問紙調査",
         app_sequence = ['customized_survey'],
         num_demo_participants = 3
     )
