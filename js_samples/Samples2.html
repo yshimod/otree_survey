@@ -1,0 +1,144 @@
+{{ block title }}
+    Samples
+{{ endblock }}
+
+{{ block content }}
+    <!-- グラフ -->
+    <div class="mb-5 row justify-content-center align-items-center">
+        <div class="col-8">
+            <div style="width: 480px; max-width: 100%; margin: auto;">
+                <canvas id="myChart" style="height: 300px; width: 100%;"></canvas>
+            </div>
+        </div>
+        <div class="col-2">
+            <button type="button" class="btn btn-danger btn-lg" onclick="randomUpdate();">ボタン</button>
+        </div>
+    </div>
+
+    <div class="mb-5 row justify-content-center">
+        <label for="id_percent_do" class="col-1 col-form-label">ド</label>
+        <div class="col-2">
+            <div class="input-group">
+                <input type="number" class="form-control form-control-lg" id="id_percent_do" min="0" max="100" step="0.1" value="20">
+                <span class="input-group-text">%</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-5 row justify-content-center">
+        <div class="col-6">
+            <label for="id_ratio_i-tsu" class="form-label">イ : ツ</label>
+            <input type="range" class="form-range" id="id_ratio_i-tsu" value="37.5">
+        </div>
+    </div>
+
+
+    <input type="hidden" name="yellow" id="id_yellow" value="">
+    <input type="hidden" name="red" id="id_red" value="">
+    <input type="hidden" name="black" id="id_black" value="">
+
+
+
+    {{ next_button }}
+
+{{ endblock }}
+
+{{ block scripts }}
+    <!-- グラフ -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js" integrity="sha256-cHVO4dqZfamRhWD7s4iXyaXWVK10odD+qp4xidFzqTI=" crossorigin="anonymous"></script>
+    <script>
+        const ctx = document.getElementById("myChart");
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [''],
+                datasets: [
+                    {
+                        label: 'ド',
+                        data: [20],
+                        backgroundColor: "#ffcf00",
+                        stack: 'stack1'
+                    },
+                    {
+                        label: 'イ',
+                        data: [30],
+                        backgroundColor: "#dd0000",
+                        stack: 'stack1'
+                    },
+                    {
+                        label: 'ツ',
+                        data: [50],
+                        backgroundColor: "#000000",
+                        stack: 'stack1'
+                    }
+                ],
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'ドイツの割合'
+                    },
+                    legend: {
+                        position: 'bottom',
+                        onClick: function () { return false }
+                    },
+                },
+                responsive: true,
+                tooltip: {
+                    mode: 'index'
+                },
+                hover: true,
+                scales: {
+                    y: {
+                        stacked: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        function updateData(yellow, red, black) {
+            document.getElementById('id_yellow').value = yellow;
+            document.getElementById('id_red').value = red;
+            document.getElementById('id_black').value = black;
+
+            myChart.data.datasets[0].data[0] = yellow;
+            myChart.data.datasets[1].data[0] = red;
+            myChart.data.datasets[2].data[0] = black;
+            myChart.update();
+        }
+
+        function randomUpdate() {
+            const yellow_rand = Math.random();
+            const red_rand = Math.random();
+            const black_rand = Math.random();
+            const totnum = yellow_rand + red_rand + black_rand;
+
+            const yellow = 100 * yellow_rand / totnum;
+            const red = 100 * red_rand / totnum;
+            const black = 100 - (yellow + red)
+
+            updateData(yellow, red, black);
+        }
+
+        function manualUpdate() {
+            const yellow = Number(document.getElementById("id_percent_do").value);
+            const redblack = 100 - yellow;
+            const ratio_redblack = Number(document.getElementById("id_ratio_i-tsu").value) / 100;
+            const red = redblack * ratio_redblack;
+            const black = redblack - red;
+
+            updateData(yellow, red, black);
+        }
+
+        window.onload = () => {
+            document.getElementById('id_percent_do').addEventListener('input', manualUpdate);
+            document.getElementById('id_ratio_i-tsu').addEventListener('input', manualUpdate);
+
+            document.getElementById('id_yellow').value = myChart.data.datasets[0].data[0];
+            document.getElementById('id_red').value = myChart.data.datasets[1].data[0];
+            document.getElementById('id_black').value = myChart.data.datasets[2].data[0];
+        }
+    </script>
+{{ endblock }}

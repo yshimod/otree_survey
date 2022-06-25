@@ -6,6 +6,12 @@ SESSION_CONFIGS = [
         display_name = "（Qualtricsのような？）質問紙調査",
         app_sequence = ['customized_survey'],
         num_demo_participants = 3
+    ),
+    dict(
+        name = 'js_samples',
+        display_name="JavaScriptを使った作例",
+        app_sequence = ['js_samples'],
+        num_demo_participants = 1
     )
 ]
 
