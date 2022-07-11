@@ -35,6 +35,14 @@ LANGUAGE_CODE = 'ja'
 REAL_WORLD_CURRENCY_CODE = 'JPY'
 USE_POINTS = True
 
+ROOMS = [
+    dict(
+        name='econ101',
+        display_name='Econ 101 class',
+        participant_label_file='_rooms/econ101.txt',
+    )
+]
+
 ADMIN_USERNAME = 'admin'
 # for security, best to set admin password in an environment variable
 ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')

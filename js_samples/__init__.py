@@ -33,7 +33,8 @@ class Samples1(Page):
 
     def vars_for_template(player: Player):
         return {
-            "optR": [200, 250, 300, 350, 400]
+            "optR": [200, 250, 300, 350, 400],
+            "participant_vars": player.participant.vars
         }
 
 
